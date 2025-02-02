@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Spaghetti Carbonara",
+        "cuisine": "italian",
+        "difficulty": "beginner",
+        "mood": "lazy",
+        "recipe": "Boil pasta, cook bacon, mix with eggs and cheese."
+    },
+    {
+        "name": "Tandoori Chicken",
+        "cuisine": "indian",
+        "difficulty": "expert",
+        "mood": "adventurous",
+        "recipe": "Marinate chicken in yogurt and spices, grill to perfection."
+    },
+    {
+        "name": "Sushi Rolls",
+        "cuisine": "asian",
+        "difficulty": "intermediate",
+        "mood": "romantic",
+        "recipe": "Roll sushi rice and fresh fish in seaweed."
+    }
+]
