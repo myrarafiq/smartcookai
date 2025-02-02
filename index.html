@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cooking Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🍰 AI Cooking Assistant 🍜</h1>
+        <p>Tell me your cooking level, preferred cuisine, and current mood, and I'll find the perfect recipe for you!</p>
+
+        <form id="recipeForm">
+            <label for="level">Cooking Level:</label>
+            <select id="level">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+            </select>
+
+            <label for="cuisine">Preferred Cuisine:</label>
+            <select id="cuisine">
+                <option value="italian">Italian</option>
+                <option value="asian">Asian</option>
+                <option value="mexican">Mexican</option>
+                <option value="indian">Indian</option>
+                <option value="french">French</option>
+            </select>
+
+            <label for="mood">Current Mood:</label>
+            <select id="mood">
+                <option value="happy">Happy 😊</option>
+                <option value="stressed">Stressed 😩</option>
+                <option value="lazy">Lazy 😴</option>
+                <option value="romantic">Romantic 💖</option>
+                <option value="adventurous">Adventurous 🌍</option>
+            </select>
+
+            <button type="submit">Get Recipe 🍽️</button>
+        </form>
+
+        <div id="recipeResult"></div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
