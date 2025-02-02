@@ -15,20 +15,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Updated to latest version
+        uses: actions/checkout@v4  # Updated version
 
       - name: Setup Pages
         uses: actions/configure-pages@v4  # Updated version
 
-      - name: Build Static Files
+      - name: Build Static Site
         run: |
           mkdir -p public
           echo "<h1>Welcome to My Cooking AI</h1>" > public/index.html
 
-      - name: Upload Pages Artifact
-        uses: actions/upload-artifact@v4  # Updated to v4
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v2  # Ensure the artifact name is correct
         with:
-          name: github-pages
           path: public
 
       - name: Deploy to GitHub Pages
