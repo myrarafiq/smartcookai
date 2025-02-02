@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this if your branch is different
+      - main  # Change if your branch is different
 
 permissions:
   contents: read
@@ -13,9 +13,10 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4  # Updated version
+        uses: actions/checkout@v4  # Updated to latest version
 
       - name: Setup Pages
         uses: actions/configure-pages@v4  # Updated version
@@ -25,9 +26,10 @@ jobs:
           mkdir -p public
           echo "<h1>Welcome to My Cooking AI</h1>" > public/index.html
 
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v2  # Ensure the artifact name is correct
+      - name: Upload Pages Artifact
+        uses: actions/upload-artifact@v4  # Updated to v4
         with:
+          name: github-pages
           path: public
 
       - name: Deploy to GitHub Pages
