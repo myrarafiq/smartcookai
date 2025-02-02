@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Cook AI 🍽️</title>
+    <title>AI Cooking Assistant</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
     <div class="container">
-        <h1>🍰 Smart Cook AI 🍜</h1>
+        <h1>🍰 AI Cooking Assistant 🍜</h1>
         <p>Tell me your cooking level, preferred cuisine, and current mood, and I'll find the perfect recipe for you!</p>
 
         <form id="recipeForm">
@@ -22,65 +22,43 @@
 
             <label for="cuisine">Preferred Cuisine:</label>
             <select id="cuisine">
-                <option value="american">American</option>
-                <option value="british">British</option>
-                <option value="canadian">Canadian</option>
-                <option value="chinese">Chinese</option>
-                <option value="croatian">Croatian</option>
-                <option value="dutch">Dutch</option>
-                <option value="egyptian">Egyptian</option>
-                <option value="filipino">Filipino</option>
-                <option value="french">French</option>
-                <option value="greek">Greek</option>
-                <option value="indian">Indian</option>
-                <option value="irish">Irish</option>
                 <option value="italian">Italian</option>
-                <option value="jamaican">Jamaican</option>
-                <option value="japanese">Japanese</option>
-                <option value="kenyan">Kenyan</option>
-                <option value="malaysian">Malaysian</option>
+                <option value="indian">Indian</option>
+                <option value="french">French</option>
                 <option value="mexican">Mexican</option>
-                <option value="moroccan">Moroccan</option>
-                <option value="polish">Polish</option>
-                <option value="portuguese">Portuguese</option>
-                <option value="russian">Russian</option>
-                <option value="spanish">Spanish</option>
-                <option value="thai">Thai</option>
-                <option value="tunisian">Tunisian</option>
-                <option value="turkish">Turkish</option>
-                <option value="ukrainian">Ukrainian</option>
-                <option value="unknown">Unknown</option>
-                <option value="vietnamese">Vietnamese</option>
+                <option value="chinese">Chinese</option>
+                <option value="american">American</option>
             </select>
 
             <label for="mood">Current Mood:</label>
             <select id="mood">
                 <option value="happy">Happy 😊</option>
-                <option value="stressed">Stressed 😩</option>
+                <option value="adventurous">Adventurous 🌍</option>
                 <option value="lazy">Lazy 😴</option>
                 <option value="romantic">Romantic 💖</option>
-                <option value="adventurous">Adventurous 🌍</option>
+                <option value="stressed">Stressed 😩</option>
             </select>
-            <div id="recipeResult"></div>
-            
-            <!-- User Feedback Section -->
-            <div id="feedbackSection" style="display: none;">
-                <p>Did you like this recipe?</p>
-                <button id="likeButton">👍 I Liked It</button>
-                <button id="dislikeButton">👎 I Didn't Like It</button>
-            
-                <p>Was it too difficult?</p>
-                <button id="easyButton">✅ Easy</button>
-                <button id="difficultButton">❌ Too Hard</button>
-            
-                <p id="feedbackMessage" style="color: green; display: none;">Thank you for your feedback!</p>
-            </div>
-
 
             <button type="submit">Get Recipe 🍽️</button>
         </form>
 
-        <div id="recipeResult"></div>
+        <div id="recipeContainer">
+            <div id="recipeResult"></div>
+        </div>
+
+        <!-- User Feedback Section -->
+        <div id="feedbackSection" style="display: none;">
+            <p>Did you like this recipe?</p>
+            <button id="likeButton">👍 I Liked It</button>
+            <button id="dislikeButton">👎 I Didn't Like It</button>
+
+            <p>Was it too difficult?</p>
+            <button id="easyButton">✅ Easy</button>
+            <button id="difficultButton">❌ Too Hard</button>
+
+            <p id="feedbackMessage" style="color: green; display: none;">Thank you for your feedback!</p>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
