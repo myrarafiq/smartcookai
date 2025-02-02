@@ -1,0 +1,23 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change this to 'master' if your default branch is master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
