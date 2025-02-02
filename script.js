@@ -1,71 +1,69 @@
-document.getElementById("recipeForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // Prevent page reload
+// Load recipes from the dataset
+let recipes = [];
+
+async function loadRecipes() {
+    try {
+        let response = await fetch("recipes.json");  // Make sure this file exists in your repository
+        recipes = await response.json();
+    } catch (error) {
+        console.error("Error loading recipes:", error);
+    }
+}
+
+// Fetch recipes when the page loads
+loadRecipes();
+
+document.getElementById("recipeForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
     let level = document.getElementById("level").value;
     let cuisine = document.getElementById("cuisine").value;
     let mood = document.getElementById("mood").value;
 
-    let userMessage = `I am a ${level} cook, I prefer ${cuisine} cuisine, and I am feeling ${mood}. Suggest a recipe for me.`;
+    let filteredRecipes = recipes.filter(recipe =>
+        recipe.cuisine.toLowerCase() === cuisine.toLowerCase() &&
+        (recipe.mood.toLowerCase() === mood.toLowerCase() || recipe.mood === "any")
+    );
 
-    let apiKey = "YOUR_OPENAI_API_KEY"; // Replace with your actual API key
-
-    if (!apiKey || apiKey === "YOUR_OPENAI_API_KEY") {
-        document.getElementById("recipeResult").innerHTML = "⚠️ API Key is missing!";
+    if (filteredRecipes.length === 0) {
+        document.getElementById("recipeResult").innerHTML = "❌ No matching recipes found. Try a different selection!";
+        document.getElementById("feedbackSection").style.display = "none";
         return;
     }
 
-    try {
-        let response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4",
-                messages: [
-                    { role: "system", content: "You are an AI chef assistant providing recipes." },
-                    { role: "user", content: userMessage }
-                ],
-                max_tokens: 300
-            })
-        });
+    let selectedRecipe = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
 
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    document.getElementById("recipeResult").innerHTML = `
+        <h3>${selectedRecipe.name}</h3>
+        <p><strong>Cuisine:</strong> ${selectedRecipe.cuisine}</p>
+        <p><strong>Difficulty:</strong> ${selectedRecipe.difficulty}</p>
+        <p><strong>Mood:</strong> ${selectedRecipe.mood}</p>
+        <p><strong>Ingredients:</strong> ${selectedRecipe.ingredients.join(", ")}</p>
+        <p><strong>Instructions:</strong> ${selectedRecipe.instructions}</p>
+    `;
 
-        let data = await response.json();
-        let recipe = data.choices[0].message.content;
-
-        document.getElementById("recipeResult").innerHTML = `<strong>🍽️ Here's Your Recipe:</strong> <br><br> ${recipe}`;
-        document.getElementById("feedbackSection").style.display = "block"; // Show feedback section
-
-        // Save the recipe in a variable for feedback
-        window.currentRecipe = recipe;
-
-    } catch (error) {
-        document.getElementById("recipeResult").innerHTML = `⚠️ Error fetching recipe: ${error.message}`;
-        console.error("Error:", error);
-    }
+    // Show feedback options
+    document.getElementById("feedbackSection").style.display = "block";
+    window.currentRecipe = selectedRecipe;
 });
 
-// Function to handle feedback
+// Handle feedback
 function sendFeedback(feedbackType) {
     let feedbackMessage = document.getElementById("feedbackMessage");
     feedbackMessage.style.display = "block";
-    
+
     let feedbackData = {
-        recipe: window.currentRecipe,
+        recipe: window.currentRecipe.name,
         feedback: feedbackType
     };
 
     console.log("User Feedback:", feedbackData);
 
     feedbackMessage.innerHTML = "Thank you for your feedback! 😊";
-    
-    // In a real application, you would send this data to a server or database
+
+    // In a real application, we would save this feedback in a database
 }
 
-// Event Listeners for Feedback Buttons
 document.getElementById("likeButton").addEventListener("click", () => sendFeedback("liked"));
 document.getElementById("dislikeButton").addEventListener("click", () => sendFeedback("disliked"));
 document.getElementById("easyButton").addEventListener("click", () => sendFeedback("easy"));
