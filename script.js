@@ -29,12 +29,15 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
             recipe.difficulty && recipe.difficulty.toLowerCase() === level
         );
 
-        // Secondary filtering (Mood preference, but not strict)
+        // Secondary filtering (Prioritize mood but do not exclude other recipes)
         let moodFilteredRecipes = primaryFilteredRecipes.filter(recipe =>
             recipe.mood && recipe.mood.toLowerCase() === mood
         );
 
-        let finalRecipes = moodFilteredRecipes.length > 0 ? moodFilteredRecipes : primaryFilteredRecipes;
+        let finalRecipes = moodFilteredRecipes.length > 0 ? [...moodFilteredRecipes, ...primaryFilteredRecipes] : primaryFilteredRecipes;
+
+        // Remove duplicates while maintaining priority (mood matches come first)
+        finalRecipes = [...new Set(finalRecipes)];
 
         let recipeResult = document.getElementById("recipeResult");
 
