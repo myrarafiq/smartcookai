@@ -33,7 +33,7 @@ document.getElementById("recipeForm").addEventListener("submit", function(event)
         recipe.difficulty.toLowerCase() === level
     );
 
-    // If mood-matching recipes exist, prioritize them
+    // If mood-matching recipes exist, prioritize them, otherwise, return the filtered recipes
     let moodMatchingRecipes = filteredRecipes.filter(recipe => recipe.mood.toLowerCase() === mood);
     let finalRecipes = moodMatchingRecipes.length > 0 ? moodMatchingRecipes : filteredRecipes;
 
@@ -73,6 +73,8 @@ function sendFeedback(feedbackType) {
     console.log("User Feedback:", feedbackData);
 
     feedbackMessage.innerHTML = "Thank you for your feedback! 😊";
+
+    // In a real application, we could store this data in a database
 }
 
 // Event Listeners for Feedback Buttons
