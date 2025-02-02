@@ -46,25 +46,13 @@ document.getElementById("recipeForm").addEventListener("submit", function(event)
     // Randomly pick a recipe from the final filtered list
     let selectedRecipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
 
-    // Fix ingredients (convert from objects to text if necessary)
-    let ingredientsList = selectedRecipe.ingredients.map(ingredient => {
-        return ingredient.name ? ingredient.name : ingredient;  // Handle object or string format
-    }).join(", ");
-
-    // Fix instructions (ensure text is present)
-    let instructionsText = selectedRecipe.instructions ? selectedRecipe.instructions : "No instructions available.";
-
-    // Fix image (if available)
-    let imageHTML = selectedRecipe.image ? `<img src="${selectedRecipe.image}" alt="${selectedRecipe.name}" style="max-width:100%; border-radius: 10px;">` : "";
-
     document.getElementById("recipeResult").innerHTML = `
-        ${imageHTML}
         <h3>${selectedRecipe.name}</h3>
         <p><strong>Cuisine:</strong> ${selectedRecipe.cuisine}</p>
         <p><strong>Difficulty:</strong> ${selectedRecipe.difficulty}</p>
         <p><strong>Mood:</strong> ${selectedRecipe.mood}</p>
-        <p><strong>Ingredients:</strong> ${ingredientsList}</p>
-        <p><strong>Instructions:</strong> ${instructionsText}</p>
+        <p><strong>Ingredients:</strong> ${selectedRecipe.ingredients.join(", ")}</p>
+        <p><strong>Instructions:</strong> ${selectedRecipe.instructions}</p>
     `;
 
     // Show feedback options
