@@ -5,6 +5,7 @@ async function loadRecipes() {
     try {
         let response = await fetch("recipes.json");  // Ensure this file exists in your repo
         recipes = await response.json();
+        console.log("Recipes loaded:", recipes);  // Debugging: Check if recipes are loaded
     } catch (error) {
         console.error("Error loading recipes:", error);
     }
@@ -27,15 +28,19 @@ document.getElementById("recipeForm").addEventListener("submit", function(event)
         return;
     }
 
+    console.log("Filtering for:", cuisine, level, mood); // Debugging: Check filters
+
     // Primary filter: cuisine & skill level
     let filteredRecipes = recipes.filter(recipe =>
         recipe.cuisine.toLowerCase() === cuisine &&
         recipe.difficulty.toLowerCase() === level
     );
 
-    // If mood-matching recipes exist, prioritize them, otherwise, return the filtered recipes
+    // If mood-matching recipes exist, prioritize them
     let moodMatchingRecipes = filteredRecipes.filter(recipe => recipe.mood.toLowerCase() === mood);
     let finalRecipes = moodMatchingRecipes.length > 0 ? moodMatchingRecipes : filteredRecipes;
+
+    console.log("Filtered Recipes:", finalRecipes); // Debugging: Check filtered results
 
     if (finalRecipes.length === 0) {
         document.getElementById("recipeResult").innerHTML = "❌ No matching recipes found. Try a different selection!";
@@ -46,12 +51,12 @@ document.getElementById("recipeForm").addEventListener("submit", function(event)
     // Randomly pick a recipe from the final filtered list
     let selectedRecipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
 
-    // Fix ingredients (convert from objects to text if necessary)
-    let ingredientsList = selectedRecipe.ingredients.map(ingredient => {
-        return ingredient.name ? ingredient.name : ingredient;  // Handle object or string format
-    }).join(", ");
+    // Ensure ingredients display correctly
+    let ingredientsList = Array.isArray(selectedRecipe.ingredients)
+        ? selectedRecipe.ingredients.map(ingredient => (typeof ingredient === "object" ? ingredient.name : ingredient)).join(", ")
+        : "No ingredients available.";
 
-    // Fix instructions (ensure text is present)
+    // Ensure instructions display correctly
     let instructionsText = selectedRecipe.instructions ? selectedRecipe.instructions : "No instructions available.";
 
     // Fix image (if available)
@@ -85,8 +90,6 @@ function sendFeedback(feedbackType) {
     console.log("User Feedback:", feedbackData);
 
     feedbackMessage.innerHTML = "Thank you for your feedback! 😊";
-
-    // In a real application, we could store this data in a database
 }
 
 // Event Listeners for Feedback Buttons
