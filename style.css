@@ -1,0 +1,55 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #FFD1DC; /* Soft Pink */
+    color: #FF69B4; /* Dark Pink */
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background-color: white;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #FF1493; /* Bright Pink */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 16px;
+}
+
+select, button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+}
+
+button {
+    background-color: #FF69B4; /* Dark Pink */
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FF1493; /* Bright Pink */
+}
+
+#recipeResult {
+    margin-top: 20px;
+    font-weight: bold;
+    background-color: #FFC0CB; /* Light Pink */
+    padding: 10px;
+    border-radius: 10px;
+}
