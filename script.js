@@ -29,9 +29,9 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
             recipe.difficulty.toLowerCase() === level
         );
 
-        // Secondary filtering (Prioritize mood but don't remove if no match)
+        // Secondary filtering (Mood preference, but not strict)
         let moodFilteredRecipes = primaryFilteredRecipes.filter(recipe =>
-            recipe.mood.toLowerCase() === mood
+            recipe.mood && recipe.mood.toLowerCase() === mood
         );
 
         let finalRecipes = moodFilteredRecipes.length > 0 ? moodFilteredRecipes : primaryFilteredRecipes;
@@ -40,16 +40,23 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
 
         if (finalRecipes.length > 0) {
             let recipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
+
+            // Debugging: Log the selected recipe to check for ingredients
+            console.log("Selected Recipe:", recipe);
+
+            // Ensure ingredients exist before mapping
+            let ingredientsList = recipe.ingredients && Array.isArray(recipe.ingredients)
+                ? recipe.ingredients.map(ing => `<li>${ing.measure || ''} ${ing.ingredient || ''}</li>`).join('')
+                : "<li>No ingredients available.</li>";
+
             recipeResult.innerHTML = `
                 <h3>🍽️ ${recipe.name}</h3>
-                <img src="${recipe.thumbnail}" alt="${recipe.name}" width="200">
+                <img src="${recipe.thumbnail || ''}" alt="${recipe.name}" width="200">
                 <p><strong>Cuisine:</strong> ${recipe.cuisine}</p>
                 <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
                 <p><strong>Recipe:</strong> ${recipe.recipe}</p>
                 <h4>Ingredients:</h4>
-                <ul>
-                    ${recipe.ingredients.map(ing => `<li>${ing.measure} ${ing.ingredient}</li>`).join('')}
-                </ul>
+                <ul>${ingredientsList}</ul>
             `;
         } else {
             recipeResult.innerHTML = "⚠️ No matching recipes found! Try adjusting your preferences.";
