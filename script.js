@@ -8,7 +8,7 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
     let userMessage = `I am a ${level} cook, I prefer ${cuisine} cuisine, and I am feeling ${mood}. Suggest a recipe for me.`;
 
     try {
-        let response = await fetch("https://your-worker-name.workers.dev", { // Replace with your Cloudflare Worker URL
+        let response = await fetch("https://still-block-3489.aa10813.workers.dev/", { // Replace with your Cloudflare Worker URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
