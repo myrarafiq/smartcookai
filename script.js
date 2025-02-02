@@ -1,69 +1,121 @@
-document.getElementById("recipeForm").addEventListener("submit", async function(event) {
+// Load recipes from the dataset
+let recipes = [];
+
+async function loadRecipes() {
+    try {
+        let response = await fetch("recipes.json");  // Ensure this file exists in your repo
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        recipes = await response.json();
+        console.log("Recipes loaded successfully:", recipes);
+    } catch (error) {
+        console.error("Error loading recipes:", error);
+        document.getElementById("recipeResult").innerHTML = "❌ Failed to load recipes.";
+    }
+}
+
+// Fetch recipes when the page loads
+loadRecipes();
+
+document.getElementById("recipeForm").addEventListener("submit", function(event) {
     event.preventDefault();
+
+    if (recipes.length === 0) {
+        document.getElementById("recipeResult").innerHTML = "❌ Recipes not loaded yet. Please wait.";
+        return;
+    }
 
     let level = document.getElementById("level").value.toLowerCase();
     let cuisine = document.getElementById("cuisine").value.toLowerCase();
     let mood = document.getElementById("mood").value.toLowerCase();
 
-    try {
-        let response = await fetch("recipes.json");
+    // Ensure only beginner, intermediate, and expert are used
+    let validLevels = ["beginner", "intermediate", "expert"];
+    if (!validLevels.includes(level)) {
+        document.getElementById("recipeResult").innerHTML = "⚠️ Invalid cooking level.";
+        return;
+    }
 
-        // Check if response is valid
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    console.log("Filtering for:", cuisine, level, mood);
 
-        let recipes = await response.json();
+    // Primary filtering (Cuisine + Difficulty)
+    let primaryFilteredRecipes = recipes.filter(recipe =>
+        recipe.cuisine.toLowerCase() === cuisine &&
+        recipe.difficulty.toLowerCase() === level
+    );
 
-        // Debugging: Check if recipes are correctly loaded
-        console.log("Loaded Recipes:", recipes);
+    // Secondary filtering (Mood preference, but not strict)
+    let moodFilteredRecipes = primaryFilteredRecipes.filter(recipe =>
+        recipe.mood && recipe.mood.toLowerCase() === mood
+    );
 
-        // Ensure recipes is an array
-        if (!Array.isArray(recipes)) {
-            throw new Error("recipes.json is not an array!");
-        }
+    let finalRecipes = moodFilteredRecipes.length > 0 ? moodFilteredRecipes : primaryFilteredRecipes;
 
-        // Primary filtering (Cuisine + Difficulty)
-        let primaryFilteredRecipes = recipes.filter(recipe =>
-            recipe.cuisine.toLowerCase() === cuisine &&
-            recipe.difficulty.toLowerCase() === level
-        );
+    console.log("Filtered Recipes:", finalRecipes);
 
-        // Secondary filtering (Mood preference, but not strict)
-        let moodFilteredRecipes = primaryFilteredRecipes.filter(recipe =>
-            recipe.mood && recipe.mood.toLowerCase() === mood
-        );
+    let recipeResult = document.getElementById("recipeResult");
 
-        let finalRecipes = moodFilteredRecipes.length > 0 ? moodFilteredRecipes : primaryFilteredRecipes;
+    if (finalRecipes.length > 0) {
+        let selectedRecipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
 
-        let recipeResult = document.getElementById("recipeResult");
+        console.log("Selected Recipe:", selectedRecipe);
 
-        if (finalRecipes.length > 0) {
-            let recipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
+        // Ensure ingredients exist before mapping
+        let ingredientsList = selectedRecipe.ingredients && Array.isArray(selectedRecipe.ingredients)
+            ? selectedRecipe.ingredients.map(ing => 
+                typeof ing === "object" 
+                ? `<li>${ing.measure || ''} ${ing.ingredient || ''}</li>` 
+                : `<li>${ing}</li>`
+              ).join('')
+            : "<li>No ingredients available.</li>";
 
-            // Debugging: Log the selected recipe to check for ingredients
-            console.log("Selected Recipe:", recipe);
+        // Ensure instructions exist
+        let instructionsText = selectedRecipe.instructions ? selectedRecipe.instructions : "No instructions available.";
 
-            // Ensure ingredients exist before mapping
-            let ingredientsList = recipe.ingredients && Array.isArray(recipe.ingredients)
-                ? recipe.ingredients.map(ing => `<li>${ing.measure || ''} ${ing.ingredient || ''}</li>`).join('')
-                : "<li>No ingredients available.</li>";
+        // Fix image (if available)
+        let imageHTML = selectedRecipe.image 
+            ? `<img src="${selectedRecipe.image}" alt="${selectedRecipe.name}" style="max-width:100%; border-radius: 10px;">` 
+            : "";
 
-            recipeResult.innerHTML = `
-                <h3>🍽️ ${recipe.name}</h3>
-                <img src="${recipe.thumbnail || ''}" alt="${recipe.name}" width="200">
-                <p><strong>Cuisine:</strong> ${recipe.cuisine}</p>
-                <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
-                <p><strong>Recipe:</strong> ${recipe.recipe}</p>
-                <h4>Ingredients:</h4>
-                <ul>${ingredientsList}</ul>
-            `;
-        } else {
-            recipeResult.innerHTML = "⚠️ No matching recipes found! Try adjusting your preferences.";
-        }
+        recipeResult.innerHTML = `
+            ${imageHTML}
+            <h3>🍽️ ${selectedRecipe.name}</h3>
+            <p><strong>Cuisine:</strong> ${selectedRecipe.cuisine}</p>
+            <p><strong>Difficulty:</strong> ${selectedRecipe.difficulty}</p>
+            <p><strong>Mood:</strong> ${selectedRecipe.mood}</p>
+            <h4>Ingredients:</h4>
+            <ul>${ingredientsList}</ul>
+            <h4>Instructions:</h4>
+            <p>${instructionsText}</p>
+        `;
 
-    } catch (error) {
-        document.getElementById("recipeResult").innerHTML = `⚠️ Error loading recipes: ${error.message}`;
-        console.error("Error:", error);
+        // Show feedback options
+        document.getElementById("feedbackSection").style.display = "block";
+        window.currentRecipe = selectedRecipe;
+    } else {
+        recipeResult.innerHTML = "⚠️ No matching recipes found! Try adjusting your preferences.";
+        document.getElementById("feedbackSection").style.display = "none";
     }
 });
+
+// Handle feedback
+function sendFeedback(feedbackType) {
+    let feedbackMessage = document.getElementById("feedbackMessage");
+    feedbackMessage.style.display = "block";
+
+    let feedbackData = {
+        recipe: window.currentRecipe.name,
+        feedback: feedbackType
+    };
+
+    console.log("User Feedback:", feedbackData);
+
+    feedbackMessage.innerHTML = "Thank you for your feedback! 😊";
+}
+
+// Event Listeners for Feedback Buttons
+document.getElementById("likeButton").addEventListener("click", () => sendFeedback("liked"));
+document.getElementById("dislikeButton").addEventListener("click", () => sendFeedback("disliked"));
+document.getElementById("easyButton").addEventListener("click", () => sendFeedback("easy"));
+document.getElementById("difficultButton").addEventListener("click", () => sendFeedback("too difficult"));
