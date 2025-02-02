@@ -5,26 +5,30 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
     let cuisine = document.getElementById("cuisine").value;
     let mood = document.getElementById("mood").value;
 
-    let userMessage = `I am a ${level} cook, I prefer ${cuisine} cuisine, and I am feeling ${mood}. Suggest a recipe for me.`;
-
     try {
-        let response = await fetch("https://still-block-3489.aa10813.workers.dev/", { // Replace with your Cloudflare Worker URL
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "gpt-4",
-                messages: [
-                    { role: "system", content: "You are Smart Cook AI, a cooking assistant that provides recipes based on user preferences." },
-                    { role: "user", content: userMessage }
-                ],
-                max_tokens: 300
-            })
-        });
+        let response = await fetch("recipes.json"); // Load local recipe data
+        let recipes = await response.json();
 
-        let data = await response.json();
-        document.getElementById("recipeResult").innerHTML = `<strong>🍽️ Here's Your Recipe:</strong> <br><br> ${data.choices[0].message.content}`;
+        let filteredRecipes = recipes.filter(recipe =>
+            recipe.cuisine === cuisine &&
+            recipe.difficulty === level &&
+            recipe.mood === mood
+        );
+
+        let recipeResult = document.getElementById("recipeResult");
+
+        if (filteredRecipes.length > 0) {
+            let recipe = filteredRecipes[Math.floor(Math.random() * filteredRecipes.length)];
+            recipeResult.innerHTML = `<strong>🍽️ ${recipe.name}</strong><br>${recipe.recipe}`;
+        } else {
+            recipeResult.innerHTML = "⚠️ No matching recipes found! Try adjusting your preferences.";
+        }
+
+        // Save user preferences for learning
+        localStorage.setItem("lastSelected", JSON.stringify({ level, cuisine, mood }));
+
     } catch (error) {
-        document.getElementById("recipeResult").innerHTML = `⚠️ Error fetching recipe: ${error.message}`;
+        document.getElementById("recipeResult").innerHTML = `⚠️ Error loading recipes: ${error.message}`;
         console.error("Error:", error);
     }
 });
