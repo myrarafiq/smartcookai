@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Cooking Assistant</title>
+    <title>Smart Cook AI 🍽️</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+    
     <div class="container">
-        <h1>🍰 AI Cooking Assistant 🍜</h1>
+        <h1>🍰 Smart Cook AI 🍜</h1>
         <p>Tell me your cooking level, preferred cuisine, and current mood, and I'll find the perfect recipe for you!</p>
 
         <form id="recipeForm">
@@ -56,30 +56,31 @@
             <label for="mood">Current Mood:</label>
             <select id="mood">
                 <option value="happy">Happy 😊</option>
-                <option value="adventurous">Adventurous 🌍</option>
+                <option value="stressed">Stressed 😩</option>
                 <option value="lazy">Lazy 😴</option>
                 <option value="romantic">Romantic 💖</option>
-                <option value="stressed">Stressed 😩</option>
+                <option value="adventurous">Adventurous 🌍</option>
             </select>
+            <div id="recipeResult"></div>
+            
+            <!-- User Feedback Section -->
+            <div id="feedbackSection" style="display: none;">
+                <p>Did you like this recipe?</p>
+                <button id="likeButton">👍 I Liked It</button>
+                <button id="dislikeButton">👎 I Didn't Like It</button>
+            
+                <p>Was it too difficult?</p>
+                <button id="easyButton">✅ Easy</button>
+                <button id="difficultButton">❌ Too Hard</button>
+            
+                <p id="feedbackMessage" style="color: green; display: none;">Thank you for your feedback!</p>
+            </div>
+
 
             <button type="submit">Get Recipe 🍽️</button>
         </form>
 
         <div id="recipeResult"></div>
-
-        <!-- User Feedback Section -->
-        <div id="feedbackSection" style="display: none;">
-            <p>Did you like this recipe?</p>
-            <button id="likeButton">👍 I Liked It</button>
-            <button id="dislikeButton">👎 I Didn't Like It</button>
-
-            <p>Was it too difficult?</p>
-            <button id="easyButton">✅ Easy</button>
-            <button id="difficultButton">❌ Too Hard</button>
-
-            <p id="feedbackMessage" style="color: green; display: none;">Thank you for your feedback!</p>
-        </div>
-
     </div>
 
     <script src="script.js"></script>
