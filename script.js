@@ -25,8 +25,8 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
 
         // Primary filtering (Cuisine + Difficulty)
         let primaryFilteredRecipes = recipes.filter(recipe =>
-            recipe.cuisine.toLowerCase() === cuisine &&
-            recipe.difficulty.toLowerCase() === level
+            recipe.cuisine && recipe.cuisine.toLowerCase() === cuisine &&
+            recipe.difficulty && recipe.difficulty.toLowerCase() === level
         );
 
         // Secondary filtering (Mood preference, but not strict)
@@ -41,20 +41,27 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
         if (finalRecipes.length > 0) {
             let recipe = finalRecipes[Math.floor(Math.random() * finalRecipes.length)];
 
-            // Debugging: Log the selected recipe to check for ingredients
+            // Debugging: Log the selected recipe to check for missing fields
             console.log("Selected Recipe:", recipe);
 
+            // Ensure recipe fields are defined
+            let recipeName = recipe.name || "Unknown Recipe";
+            let recipeCuisine = recipe.cuisine || "Unknown Cuisine";
+            let recipeDifficulty = recipe.difficulty || "Unknown Difficulty";
+            let recipeInstructions = recipe.recipe || "No instructions available.";
+            let recipeThumbnail = recipe.thumbnail || "https://via.placeholder.com/200"; // Placeholder image if missing
+
             // Ensure ingredients exist before mapping
-            let ingredientsList = recipe.ingredients && Array.isArray(recipe.ingredients)
+            let ingredientsList = (recipe.ingredients && Array.isArray(recipe.ingredients) && recipe.ingredients.length > 0)
                 ? recipe.ingredients.map(ing => `<li>${ing.measure || ''} ${ing.ingredient || ''}</li>`).join('')
                 : "<li>No ingredients available.</li>";
 
             recipeResult.innerHTML = `
-                <h3>🍽️ ${recipe.name}</h3>
-                <img src="${recipe.thumbnail || ''}" alt="${recipe.name}" width="200">
-                <p><strong>Cuisine:</strong> ${recipe.cuisine}</p>
-                <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
-                <p><strong>Recipe:</strong> ${recipe.recipe}</p>
+                <h3>🍽️ ${recipeName}</h3>
+                <img src="${recipeThumbnail}" alt="${recipeName}" width="200">
+                <p><strong>Cuisine:</strong> ${recipeCuisine}</p>
+                <p><strong>Difficulty:</strong> ${recipeDifficulty}</p>
+                <p><strong>Recipe:</strong> ${recipeInstructions}</p>
                 <h4>Ingredients:</h4>
                 <ul>${ingredientsList}</ul>
             `;
