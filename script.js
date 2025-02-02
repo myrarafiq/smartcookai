@@ -8,13 +8,13 @@ document.getElementById("recipeForm").addEventListener("submit", async function(
     let userMessage = `I am a ${level} cook, I prefer ${cuisine} cuisine, and I am feeling ${mood}. Suggest a recipe for me.`;
 
     try {
-        let response = await fetch("https://still-block-3489.aa10813.workers.dev", { // Your Cloudflare Worker URL
+        let response = await fetch("https://your-worker-name.workers.dev", { // Replace with your Cloudflare Worker URL
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "gpt-4",
                 messages: [
-                    { role: "system", content: "You are an AI chef assistant providing recipes based on user preferences." },
+                    { role: "system", content: "You are Smart Cook AI, a cooking assistant that provides recipes based on user preferences." },
                     { role: "user", content: userMessage }
                 ],
                 max_tokens: 300
